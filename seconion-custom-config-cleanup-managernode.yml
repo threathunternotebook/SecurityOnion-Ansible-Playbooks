@@ -1,0 +1,47 @@
+- name: cleanup repos/rules and other stuff on seconion distributed master node
+  hosts: managernode
+  become: true
+  become_method: sudo
+
+  tasks:
+        - name: Pause for 5 minutes for reboot
+          pause:
+            minutes: 5
+
+        - name: Ensure Bash scripts in /opt/so subdirectories are correct
+          shell: "cd /opt/so && find . -name *.sh | while read line;do chmod 754 $line ;done"
+
+        - name: Set airgap mode in salt configuration
+          lineinfile:
+            dest: /opt/so/saltstack/local/pillar/global.sls
+            regexp: '^  airgap: False'
+            line: '  airgap: true'
+            backrefs: yes
+
+        - name: rerun salt update
+          shell: "salt -t 60 \\* state.highstate"
+
+        - name: Create repodata directory
+          shell: "mkdir /nsm/repo/repodata"
+
+        - name: Create repo xml files
+          shell: "cd /nsm/repo/repodata && createrepo -v /nsm/repo/"
+
+        - name: Copy suricata rules to security onion manager
+          copy:
+            src: /home/devops/ansible/secOnion-custom/files/emerging-all.rules
+            dest: /nsm/repo/rules/emerging-all.rules
+            owner: root
+            group: user
+            mode: 0644
+
+        - name: Copy suricata rules md5 file to security onion manager
+          copy:
+            src: /home/devops/ansible/secOnion-custom/files/emerging-all.rules.md5
+            dest: /nsm/repo/rules/emerging-all.rules.md5
+            owner: root
+            group: user
+            mode: 0644
+
+        - name: Run rule update
+          shell: "so-rule-update"
