@@ -1,0 +1,156 @@
+---
+- name: Create SecOnion VM from a template
+  hosts: localhost
+  gather_facts: no
+  vars_prompt:
+   - name: "som_disk_size" ## Disk Size of Security Onion Manager Node
+     prompt: "What disk size (In GB) do you want for the Security Onion Management Node VM?"
+     default: 700
+     private: no
+   - name: "som_mem_size" ## Memory Size of Security Onion Management Node
+     prompt: "How much memory (In MB) do you want for the Security Onion Management Node VM?"
+     default: 16384
+     private: no
+   - name: "som_cpu_count" ## CPU count of Security Onion Management Node
+     prompt: "How many CPUs do you want for the Security Onion Management Node VM?"
+     default: 8
+     private: no
+   - name: "sof_disk_size" ## Disk Size of Security Onion Sensor Node
+     prompt: "What disk size (In GB) do you want for the Security Onion Sensor Node VM?"
+     default: 1000
+     private: no
+   - name: "sof_mem_size" ## Memory Size of Security Onion Sensor Node
+     prompt: "How much memory (In MB) do you want for the Security Onion Sensor Node VM?"
+     default: 131072
+     private: no
+   - name: "sof_cpu_count" ## CPU count of Security Onion Sensor Node
+     prompt: "How many CPUs do you want for the Security Onion Sensor Node VM?"
+     default: 16
+     private: no
+   - name: "sos_disk_size" ## Disk Size of Security Onion Search Node
+     prompt: "What disk size (In GB) do you want for the Security Onion Search Node VM?"
+     default: 10000
+     private: no
+   - name: "sos_mem_size" ## Memory Size of Security Onion Search Node
+     prompt: "How much memory (In MB) do you want for the Security Onion Search Node VM?"
+     default: 32768
+     private: no
+   - name: "sos_cpu_count" ## CPU count of Security Onion Search Node
+     prompt: "How many CPUs do you want for the Security Onion Search Node VM?"
+     default: 8
+     private: no
+
+  tasks:
+  - name: Configure seconion-managernode Virtual Machine Resources
+    vmware_guest:
+      hostname: "{{esxi_ip}}"
+      username: "{{esxi_usernname}}"
+      password: "{{esxi_password}}"
+      validate_certs: False
+      guest_id: "centos7_64Guest"
+      name: seconion-managernode
+      datacenter: "ha-datacenter"
+      datastore: "{{datastore}}"
+      folder: /
+      state: restarted
+      disk:
+        - size_gb: "{{som_disk_size}}"
+          type: "thin"
+          datastore: "{{datastore}}"
+      hardware:
+          memory_mb: "{{som_mem_size}}"
+          num_cpus: "{{som_cpu_count}}"
+      cdrom:
+          type: iso
+          iso_path: "{{isopath}}"
+      networks:
+        - name: "{{esxi_portgroup}}"
+          mac: "{{manager_mac}}"
+          ip: "{{manager_ip}}"
+          netmask: "{{manager_netmask}}"
+          type: static
+          device_type: "vmxnet3"
+          gateway: "{{manager_gateway}}"
+          start_connected: true
+      customization:
+          dns_servers:
+             - "{{manager_dns1}}"
+             - "{{manager_dns2}}"
+      wait_for_ip_address: "yes"
+
+  - name: Configure seconion-searchnode Virtual Machine Resources
+    vmware_guest:
+      hostname: "{{esxi_ip}}"
+      username: "{{esxi_username}}"
+      password: "{{esxi_password}}"
+      validate_certs: False
+      guest_id: "centos7_64Guest"
+      name: seconion-searchnode
+      datacenter: "ha-datacenter"
+      datastore: "{{datastore}}"
+      folder: /
+      state: restarted
+      disk:
+        - size_gb: "{{sos_disk_size}}"
+          type: "thin"
+          datastore: "{{datastore}}"
+      hardware:
+          memory_mb: "{{sos_mem_size}}"
+          num_cpus: "{{sos_cpu_count}}"
+      cdrom:
+          type: iso
+          iso_path: "{{isopath}}"
+      networks:
+        - name: "{{esxi_portgroup}}"
+          mac: "{{search_mac}}"
+          ip: "{{search_ip}}"
+          netmask: "{{search_netmask}}"
+          type: static
+          device_type: "vmxnet3"
+          gateway: "{{search_gateway}}"
+          start_connected: true
+      customization:
+          dns_servers:
+             - "{{search_dns1}}"
+             - "{{search_dns2}}"
+      wait_for_ip_address: "yes"
+
+  - name: Configure seconion-sensornode Virtual Machine Resources
+    vmware_guest:
+      hostname: "{{esxi_ip}}"
+      username: "{{esxi_username}}"
+      password: "{{esxi_password}}"
+      validate_certs: False
+      guest_id: "centos7_64Guest"
+      name: seconion-sensornode
+      datacenter: "ha-datacenter"
+      datastore: "{{datastore}}"
+      folder: "/"
+      state: restarted
+      disk:
+        - size_gb: "{{sof_disk_size}}"
+          type: "thin"
+          datastore: "{{datastore}}"
+      hardware:
+          memory_mb: "{{sof_mem_size}}"
+          num_cpus: "{{sof_cpu_count}}"
+      cdrom:
+          type: iso
+          iso_path: "{{isopath}}"
+      networks:
+        - name: "{{esxi_portgroup}}"
+          mac: "{{sensor_mac}}"
+          ip: "{{sensor_ip}}"
+          netmask: "{{sensor_netmask}}"
+          type: static
+          device_type: "vmxnet3"
+          gateway: "{{sensor_gateway}}"
+          start_connected: true
+        - name: "{{esxi_promisc_portgroup}}"
+          device_type: "vmxnet3"
+          start_connected: true
+      customization:
+          dns_servers:
+             - "{{sensor_dns1}}"
+             - "{{sensor_dns2}}"
+      wait_for_ip_address: "yes"
