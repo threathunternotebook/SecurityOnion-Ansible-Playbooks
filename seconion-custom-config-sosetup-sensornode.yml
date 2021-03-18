@@ -1,0 +1,12 @@
+- name: configure seconion distributed sensor node
+  hosts: sensornode
+  become: true
+  become_method: sudo
+
+  tasks:
+        - name: Pause for 5 minutes for reboot
+          pause:
+            minutes: 5
+
+        - name: Run Security Onion Managernode Setup
+          shell: "sudo /home/user/SecurityOnion/setup/so-setup network distributed-airgap-sensor"
