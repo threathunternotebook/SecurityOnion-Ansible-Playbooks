@@ -1,0 +1,74 @@
+- name: configure seconion distributed sensor node
+  hosts: sensornode
+  become: true
+  become_method: sudo
+
+  tasks:
+        - name: Copy SecOnion Sensornode setup configuration file
+          copy:
+            src: /home/devops/ansible/secOnion-custom/files/distributed-airgap-sensor
+            dest: /home/user/SecurityOnion/setup/automation/distributed-airgap-sensor
+            owner: root
+            group: sensor
+            mode: 0644
+
+        - name: Add Static IP configuration to ifc-ens192
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            insertbefore: "^IPV4_FAILURE_FATAL=no"
+            line:  "IPADDR="{{sensor_ip}}""
+        - name: Add Prefix
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            insertbefore: "^IPV4_FAILURE_FATAL=no"
+            line:  "PREFIX="{{sensor_prefix}}""
+        - name: Add Gateway
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            insertbefore: "^IPV4_FAILURE_FATAL=no"
+            line:  "GATEWAY="{{sensor_gateway}}""
+        - name: Add DNS
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            insertbefore: "^IPV4_FAILURE_FATAL=no"
+            line:  "DNS1="{{sensor_dns1}}""
+        - name: Set Boot Protocol to static
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            regexp: '^BOOTPROTO=dhcp'
+            line: 'BOOTPROTO=static'
+            backrefs: yes
+        - name: Delete IPV6 lines
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            state: absent
+            regexp: '^IPV6INIT=yes'
+            backrefs: yes
+        - name: Delete IPV6 line2
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            state: absent
+            regexp: '^IPV6_AUTOCONF=yes'
+            backrefs: yes
+        - name: Delete IPV6 line3
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            state: absent
+            regexp: '^IPV6_DEFROUTE=yes'
+            backrefs: yes
+        - name: Delete IPV6 line 4
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            state: absent
+            regexp: '^IPV6_FAILURE_FATAL=no'
+            backrefs: yes
+        - name: Delete IPV6 Line 5
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            state: absent
+            regexp: '^IPV6_ADDR_GEN_MODE=stable-privacy'
+            backrefs: yes
+
+        - name: Reboot Security Onion Sensornode
+          shell: "sudo shutdown -r now"
+
