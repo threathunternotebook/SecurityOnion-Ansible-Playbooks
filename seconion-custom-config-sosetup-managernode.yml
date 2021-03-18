@@ -1,0 +1,14 @@
+- name: configure seconion distributed manager node
+  hosts: managernode
+  become: true
+  become_method: sudo
+
+  tasks:
+        - name: Pause for 5 minutes for reboot
+          pause:
+            minutes: 5
+
+        - name: Change permissions on Security Onion Bash Scripts
+          shell: "cd /home/user/SecurityOnion && find . -name *.sh | while read line; do chmod 754 $line ;done"
+        - name: Run Security Onion Managernode Setup
+          shell: "sudo /home/user/SecurityOnion/setup/so-setup network distributed-airgap-manager"
