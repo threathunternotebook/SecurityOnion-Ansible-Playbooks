@@ -17,6 +17,6 @@ seconion-custom-config-searchnode.yml
 
 seconion-custom-config-sosetup-searchnode.yml
 
-seconion-custom-config-forwardnode.yml
+seconion-custom-config-sensornode.yml
 
-seconion-custom-config-sosetup-forwardnode.yml
+seconion-custom-config-sosetup-sensornode.yml
