@@ -2,7 +2,11 @@
 - name: Create SecOnion VM from a template
   hosts: localhost
   gather_facts: no
+  vars_files: group_vars/secrets.yml
   vars_prompt:
+   - name: "esxi_ip" ##IP address of esxi server to deplay SO virtual machines
+     prompt: "What is the IP address of the ESXi server?"
+     private: no
    - name: "som_disk_size" ## Disk Size of Security Onion Manager Node
      prompt: "What disk size (In GB) do you want for the Security Onion Management Node VM?"
      default: 700
