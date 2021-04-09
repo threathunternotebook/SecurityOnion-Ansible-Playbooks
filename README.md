@@ -30,3 +30,5 @@ seconion-custom-config-sosetup-searchnode.yml
 seconion-custom-config-sensornode.yml
 
 seconion-custom-config-sosetup-sensornode.yml
+
+seconion-custom-ruleupdate-managernode.yml
