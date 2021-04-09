@@ -1,0 +1,23 @@
+- name: Extend seconion managernode lvm
+  hosts: managernode
+  become: true
+  become_method: sudo
+  vars:
+     dev: /dev/sdb
+     vg_name: system
+     lv_name: nsm
+     vg_mapper_name: system-nsm
+
+  tasks:
+  - name: Extend LVM to the whole volume group
+    lvol:
+      vg: "{{vg_name}}"
+      lv: "{{lv_name}}"
+      size: +100%FREE
+    become: yes
+  - name: Extend the filesystem
+    filesystem:
+      fstype: xfs
+      dev: "/dev/system/nsm"
+      resizefs: yes
+    become: yes
