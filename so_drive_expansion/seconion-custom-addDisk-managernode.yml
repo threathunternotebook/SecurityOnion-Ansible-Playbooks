@@ -1,0 +1,30 @@
+- name: Add new disk to managernode to expand SO LVM
+  hosts: localhost
+  gather_facts: no
+  vars_files: vars/secrets.yml
+  vars_prompt:
+   - name: "esxi_ip" ##IP address of esxi server to deplay SO virtual machines
+     prompt: "What is the IP address of the ESXi server?"
+     private: no
+   - name: "som_disk_size" ## Disk Size of Security Onion Manager Node
+     prompt: "What disk size (In GB) do you want for the new disk (/dev/sdb) on the Security Onion Management Node VM?"
+     default: 4000
+     private: no
+
+  tasks:
+  - name: Add seconion-managernode Virtual Machine 2nd Drive
+    vmware_guest_disk:
+      hostname: "{{esxi_ip}}"
+      username: "{{esxi_username}}"
+      password: "{{esxi_password}}"
+      validate_certs: False
+      name: seconion-managernode
+      datacenter: "ha-datacenter"
+      disk:
+        - size_gb: "{{som_disk_size}}"
+          type: "thin"
+          datastore: "{{datastore}}"
+          scsi_controller: 1
+          unit_number: 1
+          scsi_type: 'paravirtual'
+          state: present
