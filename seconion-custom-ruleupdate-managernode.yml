@@ -1,0 +1,59 @@
+ cat seconion-custom-ruleupdate-managernode.yml
+- name: cleanup repos/rules and other stuff on seconion distributed master node
+  hosts: managernode
+  become: true
+  become_method: sudo
+  vars_files: vars/secrets.yml
+
+  tasks:
+
+        - name: Copy suricata rules to security onion manager
+          copy:
+            src: /home/devops/ansible/secOnion-custom/files/emerging-all.rules
+            dest: /nsm/repo/rules/emerging-all.rules
+            owner: root
+            group: venator
+            mode: 0644
+
+        - name: Copy suricata rules md5 file to security onion manager
+          copy:
+            src: /home/devops/ansible/secOnion-custom/files/emerging-all.rules.md5
+            dest: /nsm/repo/rules/emerging-all.rules.md5
+            owner: root
+            group: venator
+            mode: 0644
+
+        - name: Run rule update
+          shell: "so-rule-update"
+
+        - name: Set zeek processor numbers in salt configuration
+          lineinfile:
+            dest: /opt/so/saltstack/local/pillar/minions/seconion-sensornode_sensor.sls
+            regexp: '^  zeek_lbprocs: 2'
+            line: '  zeek_lbprocs: {{zeek_lbprocs}}'
+            backrefs: yes
+
+        - name: Set suricata processor numbers in salt configuration
+          lineinfile:
+            dest: /opt/so/saltstack/local/pillar/minions/seconion-sensornode_sensor.sls
+            regexp: '^  suriprocs: 2'
+            line: '  suriprocs: {{suriprocs}}'
+            backrefs: yes
+
+
+        - name: Set managernode elasticsearch heap space in salt configuration
+          lineinfile:
+            dest: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
+            regexp: "^  esheap: \'4066m\'"
+            line: '  esheap: {{esheap}}'
+            backrefs: yes
+
+        - name: Set searchnode elasticsearch heap space in salt configuration
+          lineinfile:
+            dest: /opt/so/saltstack/local/pillar/minions/seconion-searchnode_searchnode.sls
+            regexp: "^  esheap: \'4066m\'"
+            line: '  esheap: {{esheap}}'
+            backrefs: yes
+
+        - name: rerun salt update
+          shell: "salt -t 240 \\* state.highstate"
