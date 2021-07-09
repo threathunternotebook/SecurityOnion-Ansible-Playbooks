@@ -48,7 +48,7 @@
   - name: Configure seconion-managernode Virtual Machine Resources
     vmware_guest:
       hostname: "{{esxi_ip}}"
-      username: "{{esxi_usernname}}"
+      username: "{{esxi_username}}"
       password: "{{esxi_password}}"
       validate_certs: False
       guest_id: "centos7_64Guest"
