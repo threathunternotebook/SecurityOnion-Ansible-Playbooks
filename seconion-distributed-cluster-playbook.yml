@@ -2,26 +2,26 @@
 - name: Create SecOnion VM from a template
   hosts: localhost
   gather_facts: no
-  vars_files: group_vars/secrets.yml
+  vars_files: vars/secrets.yml
   vars_prompt:
    - name: "esxi_ip" ##IP address of esxi server to deplay SO virtual machines
      prompt: "What is the IP address of the ESXi server?"
      private: no
    - name: "som_disk_size" ## Disk Size of Security Onion Manager Node
      prompt: "What disk size (In GB) do you want for the Security Onion Management Node VM?"
-     default: 700
+     default: 4000
      private: no
    - name: "som_mem_size" ## Memory Size of Security Onion Management Node
      prompt: "How much memory (In MB) do you want for the Security Onion Management Node VM?"
-     default: 16384
+     default: 32768
      private: no
    - name: "som_cpu_count" ## CPU count of Security Onion Management Node
      prompt: "How many CPUs do you want for the Security Onion Management Node VM?"
-     default: 8
+     default: 16
      private: no
    - name: "sof_disk_size" ## Disk Size of Security Onion Sensor Node
      prompt: "What disk size (In GB) do you want for the Security Onion Sensor Node VM?"
-     default: 1000
+     default: 10000
      private: no
    - name: "sof_mem_size" ## Memory Size of Security Onion Sensor Node
      prompt: "How much memory (In MB) do you want for the Security Onion Sensor Node VM?"
@@ -33,7 +33,7 @@
      private: no
    - name: "sos_disk_size" ## Disk Size of Security Onion Search Node
      prompt: "What disk size (In GB) do you want for the Security Onion Search Node VM?"
-     default: 10000
+     default: 4000
      private: no
    - name: "sos_mem_size" ## Memory Size of Security Onion Search Node
      prompt: "How much memory (In MB) do you want for the Security Onion Search Node VM?"
