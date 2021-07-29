@@ -8,30 +8,30 @@
           copy:
             src: /home/ansible/ansible/secOnion-custom/files/distributed-airgap-manager
             dest: /home/venator/SecurityOnion/setup/automation/distributed-airgap-manager
-            owner: "{{ownerName}}"
-            group: "{{grpName}}"
+            owner: root
+            group: venator
             mode: 0644
 
         - name: Add Static IP configuration to ifc-ens192
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "{{somanagerIPconfig}}"
+            line:  "IPADDR="{{manager_ip}}"
         - name: Add Prefix
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "PREFIX=27"
+            line:  "PREFIX="{{manager_prefix}}""
         - name: Add Gateway
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "{{somanagerGWconfig}}"
+            line:  "GATEWAY="{{manager_gateway}}""
         - name: Add DNS
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "{{somanagerDNSconfig}}"
+            line:  "DNS1="{{manager_dns}}"
         - name: Set Boot Protocol to static
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
@@ -68,6 +68,9 @@
             state: absent
             regexp: '^IPV6_ADDR_GEN_MODE=stable-privacy'
             backrefs: yes
+
+#        - name: Reboot Security Onion Managernode
+#          shell: "sudo shutdown -r now"
 
         - name: Unconditionally reboot the machine with all defaults
           reboot:
