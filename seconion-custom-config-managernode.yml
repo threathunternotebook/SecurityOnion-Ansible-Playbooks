@@ -6,32 +6,32 @@
   tasks:
         - name: Copy SecOnion Managernode setup configuration file
           copy:
-            src: /home/devops/ansible/secOnion-custom/files/distributed-airgap-manager
-            dest: /home/user/SecurityOnion/setup/automation/distributed-airgap-manager
-            owner: root
-            group: user
+            src: /home/ansible/ansible/secOnion-custom/files/distributed-airgap-manager
+            dest: /home/venator/SecurityOnion/setup/automation/distributed-airgap-manager
+            owner: "{{ownerName}}"
+            group: "{{grpName}}"
             mode: 0644
 
-        - name: Add Static IP configuration to ifcfg-ens192
+        - name: Add Static IP configuration to ifc-ens192
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "IPADDR="{{manager_ip}}""
+            line:  "{{somanagerIPconfig}}"
         - name: Add Prefix
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "PREFIX="{{manager_prefix}}""
+            line:  "PREFIX=27"
         - name: Add Gateway
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "GATEWAY="{{manager_gateway}}""
+            line:  "{{somanagerGWconfig}}"
         - name: Add DNS
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "DNS1="{{manager_dns1}}"
+            line:  "{{somanagerDNSconfig}}"
         - name: Set Boot Protocol to static
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
@@ -69,5 +69,5 @@
             regexp: '^IPV6_ADDR_GEN_MODE=stable-privacy'
             backrefs: yes
 
-        - name: Reboot Security Onion Managernode
-          shell: "sudo shutdown -r now"
+        - name: Unconditionally reboot the machine with all defaults
+          reboot:
