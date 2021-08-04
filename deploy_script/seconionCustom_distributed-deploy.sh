@@ -17,7 +17,7 @@ echo  -e ${YELLOW}
 read -p 'What is your name?:' uservar
 
 while [ $PASSMATCH != yes ]; do
-  read -sp 'Enter Ansible Vault Password ( Hint: double the pleasure, double the fun ) : ' passvar
+  read -sp 'Enter Ansible Vault Password : ' passvar
   echo
   echo -e ${NC}
   read -sp 'Re-Enter Ansible Vault PASSWORD : ' passvar2
@@ -34,7 +34,7 @@ done
 # Set usernames and passwords in SO automation scripts
 while [ $USRMATCH != yes ]; do
   echo -e ${YELLOW}
-  read -sp 'Set admin username for security onion ( Hint: hunter ) : ' adminvar
+  read -sp 'Set admin username for security onion : ' adminvar
   echo
   echo -e ${NC}
   read -sp 'Re-enter admin username for security onion nodes : ' adminvar2
