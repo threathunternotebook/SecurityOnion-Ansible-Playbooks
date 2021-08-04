@@ -26,34 +26,42 @@
         - name: Run rule update
           shell: "so-rule-update"
 
+
         - name: Set zeek processor numbers in salt configuration
           lineinfile:
             dest: /opt/so/saltstack/local/pillar/minions/seconion-sensornode_sensor.sls
-            regexp: '^  zeek_lbprocs: 2'
+            regexp: '^  zeek_lbprocs.*'
             line: '  zeek_lbprocs: {{zeek_lbprocs}}'
             backrefs: yes
 
         - name: Set suricata processor numbers in salt configuration
           lineinfile:
             dest: /opt/so/saltstack/local/pillar/minions/seconion-sensornode_sensor.sls
-            regexp: '^  suriprocs: 2'
+            regexp: '^  suriprocs.*'
             line: '  suriprocs: {{suriprocs}}'
             backrefs: yes
-
 
         - name: Set managernode elasticsearch heap space in salt configuration
           lineinfile:
             dest: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
-            regexp: "^  esheap: \'4066m\'"
+            regexp: '4066'
+            line: '  esheap: {{esheap}}'
+            backrefs: yes
+
+        - name: Set managernode elasticsearch heap space in salt configuration
+          lineinfile:
+            dest: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
+            regexp: '^  esheap.*'
             line: '  esheap: {{esheap}}'
             backrefs: yes
 
         - name: Set searchnode elasticsearch heap space in salt configuration
           lineinfile:
             dest: /opt/so/saltstack/local/pillar/minions/seconion-searchnode_searchnode.sls
-            regexp: "^  esheap: \'4066m\'"
+            regexp: '^  esheap.*'
             line: '  esheap: {{esheap}}'
             backrefs: yes
+
 
         - name: rerun salt update
           shell: "salt -t 240 \\* state.highstate"
