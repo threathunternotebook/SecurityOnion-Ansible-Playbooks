@@ -9,7 +9,7 @@
 
         - name: Copy suricata rules to security onion manager
           copy:
-            src: /home/devops/ansible/secOnion-custom/files/emerging-all.rules
+            src: /home/ansible/ansible/secOnion-custom/files/emerging-all.rules
             dest: /nsm/repo/rules/emerging-all.rules
             owner: root
             group: venator
@@ -17,7 +17,7 @@
 
         - name: Copy suricata rules md5 file to security onion manager
           copy:
-            src: /home/devops/ansible/secOnion-custom/files/emerging-all.rules.md5
+            src: /home/ansible/ansible/secOnion-custom/files/emerging-all.rules.md5
             dest: /nsm/repo/rules/emerging-all.rules.md5
             owner: root
             group: venator
@@ -25,7 +25,6 @@
 
         - name: Run rule update
           shell: "so-rule-update"
-
 
         - name: Set zeek processor numbers in salt configuration
           lineinfile:
@@ -41,19 +40,11 @@
             line: '  suriprocs: {{suriprocs}}'
             backrefs: yes
 
-        - name: Set managernode elasticsearch heap space in salt configuration
-          lineinfile:
-            dest: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
-            regexp: '4066'
-            line: '  esheap: {{esheap}}'
-            backrefs: yes
-
-        - name: Set managernode elasticsearch heap space in salt configuration
-          lineinfile:
-            dest: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
+        - name: replace Elasticsearch Heap Space Memory line
+          replace:
+            path: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
             regexp: '^  esheap.*'
-            line: '  esheap: {{esheap}}'
-            backrefs: yes
+            replace: '  esheap: {{esheap}}'
 
         - name: Set searchnode elasticsearch heap space in salt configuration
           lineinfile:
@@ -61,7 +52,6 @@
             regexp: '^  esheap.*'
             line: '  esheap: {{esheap}}'
             backrefs: yes
-
 
         - name: rerun salt update
           shell: "salt -t 240 \\* state.highstate"
