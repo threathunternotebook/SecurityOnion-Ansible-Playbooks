@@ -4,6 +4,15 @@
   become_method: sudo
 
   tasks:
+        - name: create elastic stack license directory
+          shell: 'sudo mkdir -p /opt/so/state'
+
+        - name: Create Elastic Stack license file
+          file:
+            state: touch
+            path: /opt/so/state/yeselastic.txt
+            mode: '644'
+
         - name: Copy SecOnion Managernode setup configuration file
           copy:
             src: /home/ansible/ansible/secOnion-custom/files/distributed-airgap-manager
