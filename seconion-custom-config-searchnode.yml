@@ -4,34 +4,37 @@
   become_method: sudo
 
   tasks:
-        - name: Copy SecOnion Managernode setup configuration file
+        - name: Unconditionally reboot searchnode
+          reboot:
+
+        - name: Copy SecOnion searchnode setup configuration file
           copy:
-            src: /home/devops/ansible/secOnion-custom/files/distributed-airgap-search
-            dest: /home/user/SecurityOnion/setup/automation/distributed-airgap-search
-            owner: root
-            group: user
+            src: /home/ansible/ansible/secOnion-custom/files/distributed-airgap-search
+            dest: /home/{{so_owner}}/SecurityOnion/setup/automation/distributed-airgap-search
+            owner: {{owner}}
+            group: {{group}}
             mode: 0644
 
         - name: Add Static IP configuration to ifc-ens192
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "IPADDR="{{search_ip}}""
+            line:  "IPADDR=172.16.1.16"
         - name: Add Prefix
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "PREFIX="{{search_prefix}}""
+            line:  "PREFIX=27"
         - name: Add Gateway
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "GATEWAY="{{search_gateway}}""
+            line:  "GATEWAY=172.16.1.1"
         - name: Add DNS
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "DNS1="{{search_dns1}}""
+            line:  "DNS1=172.16.1.13"
         - name: Set Boot Protocol to static
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
@@ -69,6 +72,5 @@
             regexp: '^IPV6_ADDR_GEN_MODE=stable-privacy'
             backrefs: yes
 
-        - name: Reboot Security Onion Managernode
-          shell: "sudo shutdown -r now"
-
+        - name: Unconditionally reboot the machine with all defaults
+          reboot:
