@@ -10,7 +10,7 @@
         - name: Copy SecOnion searchnode setup configuration file
           copy:
             src: /home/ansible/ansible/secOnion-custom/files/distributed-airgap-search
-            dest: /home/{{so_owner}}/SecurityOnion/setup/automation/distributed-airgap-search
+            dest: /home/{{so_user}}/SecurityOnion/setup/automation/distributed-airgap-search
             owner: {{owner}}
             group: {{group}}
             mode: 0644
