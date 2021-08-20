@@ -19,22 +19,22 @@
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "IPADDR=172.16.1.17"
+            line:  "IPADDR={{sensor_ip}}"
         - name: Add Prefix
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "PREFIX=27"
+            line:  "PREFIX={{sensor_ip_prefix}}"
         - name: Add Gateway
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "GATEWAY=172.16.1.1"
+            line:  "GATEWAY={{sensor_gateway}}"
         - name: Add DNS
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
             insertbefore: "^IPV4_FAILURE_FATAL=no"
-            line:  "DNS1=172.16.1.13"
+            line:  "DNS1={{sensor_dns}}"
         - name: Set Boot Protocol to static
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
