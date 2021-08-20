@@ -1,5 +1,4 @@
- cat seconion-custom-ruleupdate-managernode.yml
-- name: cleanup repos/rules and other stuff on seconion distributed master node
+ - name: cleanup repos/rules and other stuff on seconion distributed master node
   hosts: managernode
   become: true
   become_method: sudo
@@ -11,16 +10,16 @@
           copy:
             src: /home/ansible/ansible/secOnion-custom/files/emerging-all.rules
             dest: /nsm/repo/rules/emerging-all.rules
-            owner: root
-            group: venator
+            owner: {{owner}}
+            group: {{group}}
             mode: 0644
 
         - name: Copy suricata rules md5 file to security onion manager
           copy:
             src: /home/ansible/ansible/secOnion-custom/files/emerging-all.rules.md5
             dest: /nsm/repo/rules/emerging-all.rules.md5
-            owner: root
-            group: venator
+            owner: {{owner}}
+            group: {{group}}
             mode: 0644
 
         - name: Run rule update
@@ -40,7 +39,7 @@
             line: '  suriprocs: {{suriprocs}}'
             backrefs: yes
 
-        - name: replace Elasticsearch Heap Space Memory line
+        - name: replace esheap line in seconion manager minion file
           replace:
             path: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
             regexp: '^  esheap.*'
@@ -55,3 +54,4 @@
 
         - name: rerun salt update
           shell: "salt -t 240 \\* state.highstate"
+          ignore_errors: yes
