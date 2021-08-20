@@ -16,7 +16,7 @@
         - name: Copy SecOnion Managernode setup configuration file
           copy:
             src: /home/ansible/ansible/secOnion-custom/files/distributed-airgap-manager
-            dest: /home/venator/SecurityOnion/setup/automation/distributed-airgap-manager
+            dest: /home/{{so_user}}/SecurityOnion/setup/automation/distributed-airgap-manager
             owner: {{owner}}
             group: {{group}}
             mode: 0644
