@@ -2,6 +2,7 @@
   hosts: managernode
   become: true
   become_method: sudo
+  vars_files: vars/secrets.yml
 
     tasks:
         - name: Pause 5 minutes for reboot before running managernode sosetup
