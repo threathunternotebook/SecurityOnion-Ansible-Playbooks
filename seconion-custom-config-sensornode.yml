@@ -2,6 +2,7 @@
   hosts: sensornode
   become: true
   become_method: sudo
+  vars_files: vars/secrets.yml
 
   tasks:
         - name: Unconditionally reboot sensornode
