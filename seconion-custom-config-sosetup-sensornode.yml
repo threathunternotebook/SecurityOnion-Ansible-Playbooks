@@ -8,5 +8,11 @@
           pause:
             minutes: 5
 
-        - name: Run Security Onion Managernode Setup
-          shell: "sudo /home/user/SecurityOnion/setup/so-setup network distributed-airgap-sensor"
+        - name: Fix is_airgap variable for unattended offline install on SO 2.3.30, 2.3.61
+          lineinfile:
+            path: /home/{{so_user}}/SecurityOnion/setup/so-setup
+            insertafter: '^automation\=\$2'
+            line: 'is_airgap=true'
+
+        - name: Run Security Onion Sensornode Setup
+          shell: "sudo /home/{{so_user}}/SecurityOnion/setup/so-setup network distributed-airgap-sensor"
