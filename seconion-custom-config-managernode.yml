@@ -17,8 +17,8 @@
           copy:
             src: /home/ansible/ansible/secOnion-custom/files/distributed-airgap-manager
             dest: /home/venator/SecurityOnion/setup/automation/distributed-airgap-manager
-            owner: root
-            group: venator
+            owner: {{owner}}
+            group: {{group}}
             mode: 0644
 
         - name: Add Static IP configuration to ifc-ens192
@@ -77,9 +77,6 @@
             state: absent
             regexp: '^IPV6_ADDR_GEN_MODE=stable-privacy'
             backrefs: yes
-
-#        - name: Reboot Security Onion Managernode
-#          shell: "sudo shutdown -r now"
 
         - name: Unconditionally reboot the machine with all defaults
           reboot:
