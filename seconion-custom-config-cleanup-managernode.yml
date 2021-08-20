@@ -31,6 +31,6 @@
         - name: Set DNS server back to original
           lineinfile:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens192
-            regexp: '^DNS1=172.16.1.13'
-            line: 'DNS1=172.16.1.14'
+            regexp: '^DNS1={{old_somgr_dns1}}'
+            line: 'DNS1={{new_somgr_dns1}}'
             backrefs: yes
