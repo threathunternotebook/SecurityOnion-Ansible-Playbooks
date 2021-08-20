@@ -18,12 +18,19 @@
             line: '  airgap: true'
             backrefs: yes
 
+        - name: replace esheap line in seconion manager minion file
+          replace:
+            path: /opt/so/saltstack/local/pillar/minions/seconion-managernode_manager.sls
+            regexp: '^  esheap.*'
+            replace: '  esheap: {{esheap}}'
+
         - name: rerun salt update
-          shell: "salt -t 60 \\* state.highstate"
+          shell: "salt -t 240 \\* state.highstate"
+          ignore_errors: yes
 
-        - name: Create repodata directory
-          shell: "mkdir /nsm/repo/repodata"
-
-        - name: Create repo xml files
-          shell: "cd /nsm/repo/repodata && createrepo -v /nsm/repo/"
-
+        - name: Set DNS server back to original
+          lineinfile:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens192
+            regexp: '^DNS1=172.16.1.13'
+            line: 'DNS1=172.16.1.14'
+            backrefs: yes
