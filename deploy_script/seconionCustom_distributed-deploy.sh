@@ -72,7 +72,7 @@ cd /home/ansible/ansible/secOnion-custom/vars && sed -i 's/esheap.*/esheap: '\"\
 
 # Set usernames and password in the SO managernode automation configuration file
 cd /home/ansible/ansible/secOnion-custom/files && sed -i "s/AUSERNAME/$adminvar/g" "distributed-airgap-manager"
-cd /home/ansible/ansible/secOnion-custom/files && sed -i "s/WUSERNAME/$adminvar@localhost.local/g" "distributed-airgap-manager"
+cd /home/ansible/ansible/secOnion-custom/files && sed -i "s/WUSERNAME/$adminvar@hostname.domain/g" "distributed-airgap-manager"
 cd /home/ansible/ansible/secOnion-custom/files && sed -i "s/PASSWORD/$passvar/g" "distributed-airgap-manager"
 
 # Set usernames and password in the SO searchnode automation configuration file
