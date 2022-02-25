@@ -2,7 +2,7 @@
 Ansible Playbooks for Security Onion Deployment to VMware ESXi
 In this repo, we are going to present a method to deploy a custom Security Onion 2.3 distributed environment to ESXi using ansible playbooks and SO 2.3 automation configuration files. Note that the playbooks also correct some issues found during the implementation of this process.\
 
-#### Update - Ansible playbooks work for SO 2.3.30 and 2.3.60 for offline AIRGAP install
+#### Update - Ansible playbooks work for SO 2.3.30, 2.3.60, 2.3.100 for offline AIRGAP install
 
 ## Prerequisities
 In order for the Ansible playbooks to deploy the Security Onion Nodes to ESXi, we need the following:
