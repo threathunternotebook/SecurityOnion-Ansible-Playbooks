@@ -6,6 +6,11 @@
 
 rm -rf /tmp/vault-file
 
+cp /home/ansible/ansible/secOnion-custom/files/backup/distributed-airgap-manager /home/ansible/ansible/secOnion-custom/files/
+cp /home/ansible/ansible/secOnion-custom/files/backup/distributed-airgap-search /home/ansible/ansible/secOnion-custom/files/
+cp /home/ansible/ansible/secOnion-custom/files/backup/distributed-airgap-sensor /home/ansible/ansible/secOnion-custom/files/
+cp /home/ansible/ansible/secOnion-custom/files/backup/secrets.yml /home/ansible/ansible/secOnion-custom/vars/
+
 YELLOW='\033[1;33m'
 RED='\033[1;31m'
 NC='\033[0m' # No Color
